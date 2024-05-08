@@ -6,21 +6,36 @@ curl https://jsonplaceholder.typicode.com/posts
 curl https://jsonplaceholder.typicode.com/posts | jq '.[].title'
 
 
-curl https://jsonplaceholder.typicode.com/posts | jq '.[] | select(.id == 10)'
+import requests
+import json
+
+response = requests.get("https://jsonplaceholder.typicode.com/posts")
+
+
+posts = json.loads(response.text)
+
+
+post_id = 5
+for post in posts:
+    if post["id"] == post_id:
+        print(json.dumps(post, indent=2))
+        break
 
 
 import requests
 import json
 
+
 new_post = {
-    "title": "Mi nuevo post",
-    "body": "Este es el cuerpo de mi nuevo post.",
+    "title": "Nuevo post",
+    "body": "Este es el contenido del nuevo post",
     "userId": 1
 }
 
-response = requests.post("https://jsonplaceholder.typicode.com/posts", data=json.dumps(new_post), headers={"Content-Type": "application/json"})
+response = requests.post("https://jsonplaceholder.typicode.com/posts", json=new_post)
 
 print(json.dumps(response.json(), indent=2))
+
 
 
 import requests
@@ -29,7 +44,6 @@ import json
 response = requests.get("https://jsonplaceholder.typicode.com/posts/999999")
 
 if response.status_code == 200:
-    # Procesar la respuesta con jq
     print(json.dumps(response.json(), indent=2))
 else:
   
