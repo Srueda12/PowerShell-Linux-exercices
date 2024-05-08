@@ -1,0 +1,43 @@
+curl https://jsonplaceholder.typicode.com/users
+curl https://jsonplaceholder.typicode.com/users | jq
+
+
+curl https://jsonplaceholder.typicode.com/posts
+curl https://jsonplaceholder.typicode.com/posts | jq '.[].title'
+
+
+curl https://jsonplaceholder.typicode.com/posts | jq '.[] | select(.id == 10)'
+
+
+import requests
+import json
+
+new_post = {
+    "title": "Mi nuevo post",
+    "body": "Este es el cuerpo de mi nuevo post.",
+    "userId": 1
+}
+
+response = requests.post("https://jsonplaceholder.typicode.com/posts", data=json.dumps(new_post), headers={"Content-Type": "application/json"})
+
+print(json.dumps(response.json(), indent=2))
+
+
+import requests
+import json
+
+response = requests.get("https://jsonplaceholder.typicode.com/posts/999999")
+
+if response.status_code == 200:
+    # Procesar la respuesta con jq
+    print(json.dumps(response.json(), indent=2))
+else:
+  
+    try:
+        error_data = json.loads(response.text)
+        error_message = error_data.get("error", "Un error inesperado ocurrió")
+        print(f"Error: {error_message}")
+    except (ValueError, KeyError):
+        print("Error: No se pudo procesar la respuesta del servidor.")
+
+
